@@ -1,11 +1,3 @@
-# Navigate to correct location
-cd ~/projects/aws-network-infrastructure
-
-# Create directory
-mkdir -p .github/workflows
-
-# Create the file directly (copy this entire block and paste it)
-cat > .github/workflows/terraform.yml << 'ENDOFFILE'
 name: 'Terraform VPC Deployment'
 
 on:
