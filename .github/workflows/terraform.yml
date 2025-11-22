@@ -100,4 +100,3 @@ jobs:
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       run: terraform output
       working-directory: ./terraform
-ENDOFFILE
