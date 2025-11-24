@@ -32,3 +32,21 @@ output "private_route_table_ids" {
   description = "IDs of private route tables"
   value       = aws_route_table.private[*].id
 }
+
+output "ram_resource_share_arn" {
+  description = "ARN of the RAM resource share"
+  value       = aws_ram_resource_share.vpc_share.arn
+}
+
+output "ram_resource_share_name" {
+  description = "Name of the RAM resource share"
+  value       = aws_ram_resource_share.vpc_share.name
+}
+
+output "shared_subnets" {
+  description = "List of shared subnet IDs"
+  value = concat(
+    aws_subnet.public[*].id,
+    aws_subnet.private[*].id
+  )
+}
