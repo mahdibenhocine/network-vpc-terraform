@@ -83,4 +83,18 @@ resource "aws_route_table_association" "private" {
   route_table_id = aws_route_table.private[count.index].id
 }
 
-# Trigger CI/CD pipeline
+
+
+
+
+
+// Delete the 20 ressources , from the console 
+  Not using terraform rm , because there is no tfstate , terraform rm removes from tfstate 
+  // Setup the Backend on S3
+  Run the Apply / Pipeline  (without using git)
+  Run again the terraform Plan 
+
+
+
+// Other option is to IMPORT the ressources 
+  // Setup the Backend on S3
