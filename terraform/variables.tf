@@ -1,5 +1,5 @@
 variable "aws_region" {
-  description = "AWS region for resources"
+  description = "AWS region for VPC deployment"
   type        = string
   default     = "eu-west-1"
 }
@@ -25,11 +25,17 @@ variable "public_subnet_cidrs" {
 variable "private_subnet_cidrs" {
   description = "CIDR blocks for private subnets"
   type        = list(string)
-  default     = ["172.16.16.0/24", "172.16.17.0/24"]
+  default     = ["172.16.11.0/24", "172.16.12.0/24"]
+}
+
+variable "environment" {
+  description = "Environment name"
+  type        = string
+  default     = "production"
 }
 
 variable "project_name" {
-  description = "Project name for resource naming"
+  description = "Project name for resource tagging"
   type        = string
-  default     = "network-infrastructure"
+  default     = "network-vpc"
 }

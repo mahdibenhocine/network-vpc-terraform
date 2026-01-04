@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 1.0"
+  required_version = ">= 1.5.0"
 
   required_providers {
     aws = {
@@ -8,22 +8,18 @@ terraform {
     }
   }
 
-  backend "s3" {
-    bucket         = "amir-network-infra-tfstate"
-    key            = "aws-network-infra/terraform.tfstate"
-    region         = "eu-west-1"
-    encrypt        = true
+  cloud {
+    organization = "cloudwithben-org"
+
+    workspaces {
+      name = "network-vpc-prod"
+    }
   }
 }
 
 provider "aws" {
   region = var.aws_region
-
-  default_tags {
-    tags = {
-      Project     = "Network Infrastructure"
-      ManagedBy   = "Terraform"
-      Environment = "Production"
-    }
-  }
+  
+  # Terraform Cloud will provide credentials via OIDC
+  # No assume_role needed - handled by environment variables
 }

@@ -1,10 +1,13 @@
+# VPC
 resource "aws_vpc" "main" {
   cidr_block           = var.vpc_cidr
   enable_dns_hostnames = true
   enable_dns_support   = true
 
   tags = {
-    Name = "${var.project_name}-vpc"
+    Name        = "${var.project_name}-vpc"
+    Environment = var.environment
+    ManagedBy   = "Terraform"
   }
 }
 
@@ -13,40 +16,43 @@ resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main.id
 
   tags = {
-    Name = "${var.project_name}-igw"
+    Name        = "${var.project_name}-igw"
+    Environment = var.environment
   }
 }
 
 # Public Subnets
 resource "aws_subnet" "public" {
-  count                   = 2
-  vpc_id                  = aws_vpc.main.id
-  cidr_block              = var.public_subnet_cidrs[count.index]
-  availability_zone       = var.availability_zones[count.index]
+  count             = length(var.public_subnet_cidrs)
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = var.public_subnet_cidrs[count.index]
+  availability_zone = var.availability_zones[count.index]
+
   map_public_ip_on_launch = true
 
   tags = {
-    Name = "${var.project_name}-public-subnet-${count.index + 1}"
-    Type = "Public"
+    Name        = "${var.project_name}-public-subnet-${count.index + 1}"
+    Environment = var.environment
+    Type        = "Public"
   }
 }
 
 # Private Subnets
 resource "aws_subnet" "private" {
-  count             = 2
+  count             = length(var.private_subnet_cidrs)
   vpc_id            = aws_vpc.main.id
   cidr_block        = var.private_subnet_cidrs[count.index]
   availability_zone = var.availability_zones[count.index]
 
   tags = {
-    Name = "${var.project_name}-private-subnet-${count.index + 1}"
-    Type = "Private"
+    Name        = "${var.project_name}-private-subnet-${count.index + 1}"
+    Environment = var.environment
+    Type        = "Private"
   }
 }
 
-# Route Table for Public Subnets
+# Public Route Table
 resource "aws_route_table" "public" {
-  count  = 2
   vpc_id = aws_vpc.main.id
 
   route {
@@ -55,32 +61,32 @@ resource "aws_route_table" "public" {
   }
 
   tags = {
-    Name = "${var.project_name}-public-rt-${count.index + 1}"
+    Name        = "${var.project_name}-public-rt"
+    Environment = var.environment
   }
 }
 
-# Route Table for Private Subnets
+# Private Route Tables (one per AZ for future NAT gateway flexibility)
 resource "aws_route_table" "private" {
-  count  = 2
+  count  = length(var.availability_zones)
   vpc_id = aws_vpc.main.id
 
   tags = {
-    Name = "${var.project_name}-private-rt-${count.index + 1}"
+    Name        = "${var.project_name}-private-rt-${count.index + 1}"
+    Environment = var.environment
   }
 }
 
-# Associate Public Subnets with Public Route Tables
+# Public Subnet Route Table Associations
 resource "aws_route_table_association" "public" {
-  count          = 2
+  count          = length(aws_subnet.public)
   subnet_id      = aws_subnet.public[count.index].id
-  route_table_id = aws_route_table.public[count.index].id
+  route_table_id = aws_route_table.public.id
 }
 
-# Associate Private Subnets with Private Route Tables
+# Private Subnet Route Table Associations
 resource "aws_route_table_association" "private" {
-  count          = 2
+  count          = length(aws_subnet.private)
   subnet_id      = aws_subnet.private[count.index].id
   route_table_id = aws_route_table.private[count.index].id
 }
-
-# Trigger CI/CD pipeline
