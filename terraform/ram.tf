@@ -2,7 +2,7 @@
 variable "sandbox_ou_arn" {
   description = "ARN of the Sandbox Organizational Unit"
   type        = string
-  default     = "arn:aws:organizations::212712011130:ou/o-pyismvm1sw/ou-w9g6-s660arda"   # Replace this with data.source
+  default     = "arn:aws:organizations::173649228578:ou/o-pyismvm1sw/ou-w9g6-s660arda"   # Replace this with data.source
 }
 
 # Create RAM Resource Share
