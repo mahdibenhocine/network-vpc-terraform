@@ -8,12 +8,12 @@ output "vpc_cidr" {
   value       = aws_vpc.main.cidr_block
 }
 
-output "public_subnet_ids" {
+output "public_subnets" {
   description = "List of public subnet IDs"
   value       = aws_subnet.public[*].id
 }
 
-output "private_subnet_ids" {
+output "private_subnets" {
   description = "List of private subnet IDs"
   value       = aws_subnet.private[*].id
 }
@@ -36,19 +36,4 @@ output "private_route_table_ids" {
 output "availability_zones" {
   description = "Availability zones used"
   value       = var.availability_zones
-}
-
-output "vpc_id" {
-  description = "The ID of the VPC"
-  value       = module.vpc.vpc_id
-}
-
-output "public_subnets" {
-  description = "List of IDs of public subnets"
-  value       = module.vpc.public_subnets
-}
-
-output "private_subnets" {
-  description = "List of IDs of private subnets"
-  value       = module.vpc.private_subnets
 }
